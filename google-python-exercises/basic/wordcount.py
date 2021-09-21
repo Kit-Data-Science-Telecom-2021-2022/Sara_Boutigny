@@ -38,6 +38,7 @@ print_words() and print_top().
 """
 
 import sys
+import string
 
 # +++your code here+++
 # Define print_words(filename) and print_top(filename) functions.
@@ -45,32 +46,39 @@ import sys
 # and builds and returns a word/count dict for it.
 # Then print_words() and print_top() can just call the utility function.
 def print_words(filename):
-  dict_words = open_and_store(filename)
-  dict_words = sorted(dict_words.items(), key=lambda x: x[0])
-  for key, value in dict_words:
+  words = make_dict(filename)
+
+  words = sorted(words.items(), key=lambda x: x[0])
+
+  for key, value in words:
     print(key, value)
 
 
 def print_top(filename):
-  dict_words = open_and_store(filename)
-  dict_words = sorted(dict_words.items(), key=lambda x: x[1], reverse=True)
-  for key, value in dict_words[:20]:
+
+  words = make_dict(filename)
+  words = sorted(words.items(), key=lambda x: x[1], reverse=True)
+
+  for key, value in words[:19]:
     print(key, value)
 
+def make_dict(filename):
 
-def open_and_store(filename):
-  punctuation = ".,;:-_(\n)*`--?!\'\""
-  dict_words = {}
-  with open(filename, 'r') as fd:
-    lines = fd.read().split()
+  dict_ = {}
+  punct = string.punctuation
+
+  with open(filename) as file_:
+    lines = file_.read().split()
+    lines = [word.strip(punct).lower() for word in lines if word.strip(punct).lower()!='']
+
     for word in lines:
-      new_word = word.strip(punctuation).lower()
-      if new_word != '':
-        if new_word not in dict_words:
-          dict_words[new_word] = 1
+      if word != '':
+        if word not in dict_.items():
+          dict_[word] = 1
         else:
-          dict_words[new_word] += 1
-  return dict_words
+          dict_[word] += 1
+
+  return dict_
 ###
 
 # This basic command line argument parsing code is provided and
